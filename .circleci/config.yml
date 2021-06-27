@@ -72,6 +72,7 @@ jobs:
       - run:
           name: Frontend-test
           command: |
+            cd frontend
             npm test
                 
   test-backend:
@@ -84,6 +85,7 @@ jobs:
       - run:
           name: Frontend-test
           command: |
+            cd frontend
             npm test
             
 workflows:
