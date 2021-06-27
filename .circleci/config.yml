@@ -44,7 +44,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm l -g jest
+            npm i -g jest
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -61,7 +61,7 @@ jobs:
           command: |
              cd backend
              npm install
-             npm l -g jest
+             npm i -g jest
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
