@@ -67,7 +67,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: fe-deps-{{ checksum "package-lock.json" }}
+          keys: 
+            - fe-deps-{{ checksum "package-lock.json" }}
+            - fe-deps-
+
       - run:
           name: backend-test
           command: |
@@ -80,7 +83,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: be-deps-{{ checksum "package-lock.json" }}
+          keys: 
+            - be-deps-{{ checksum "package-lock.json" }}
+            - be-deps-
       - run:
           name: backend-test
           command: |
