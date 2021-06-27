@@ -42,7 +42,6 @@ jobs:
           command: |
             cd frontend
             npm install
-      - run: npm install
       - save_cache:
           key: fe-deps-{{ checksum "package-lock.json" }}
           paths:
