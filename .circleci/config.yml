@@ -34,7 +34,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: alpine-node:latest
+      - image: cimg/node:16.4.0
     steps:
       - checkout
       - run:
@@ -49,7 +49,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: alpine-node:latest
+      - image: cimg/node:16.4.0
     steps:
       - checkout
       - run:
@@ -63,7 +63,7 @@ jobs:
             - "node_modules"
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:16.4.0
     steps:
       - checkout
       - restore_cache:
@@ -79,7 +79,7 @@ jobs:
                 
   test-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:16.4.0
     steps:
       - checkout
       - restore_cache:
