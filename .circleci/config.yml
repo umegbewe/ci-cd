@@ -105,7 +105,6 @@ jobs:
           name: frontend-scan
           command: |
             cd backend
-            npm install
             npm audit
 
   scan-backend:
@@ -121,7 +120,6 @@ jobs:
           name: backend-scan
           command: |
             cd backend
-            npm install
             npm audit
             
 workflows:
