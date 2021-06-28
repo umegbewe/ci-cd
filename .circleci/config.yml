@@ -92,6 +92,37 @@ jobs:
             cd backend
             npm install
             npm test
+scan-frontend:
+    docker:
+      - image: cimg/node:16.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - fe-deps-{{ checksum "package-lock.json" }}
+            - fe-deps-
+      - run:
+          name: frontend-scan
+          command: |
+            cd backend
+            npm install
+            npm audit
+
+scan-backend:
+    docker:
+      - image: cimg/node:16.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - be-deps-{{ checksum "package-lock.json" }}
+            - be-deps-
+      - run:
+          name: backend-scan
+          command: |
+            cd backend
+            npm install
+            npm audit
             
 workflows:
   default:
