@@ -34,59 +34,95 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:16.4.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
+            cd frontend
             npm install
       - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+          key: fe-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - "node_modules"
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:16.4.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
+             cd backend
              npm install
       - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
-
+          key: be-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - "node_modules"
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:16.4.0
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
-      - run:
-          name: frontend-test
-          command: |
-            cd frontend
-            npm test
-                
-  test-backend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
+          keys: 
+            - fe-deps-{{ checksum "package-lock.json" }}
+            - fe-deps-
       - run:
           name: backend-test
           command: |
             cd backend
+            npm install
             npm test
+                
+  test-backend:
+    docker:
+      - image: cimg/node:16.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - be-deps-{{ checksum "package-lock.json" }}
+            - be-deps-
+      - run:
+          name: backend-test
+          command: |
+            cd backend
+            npm install
+            npm test
+  scan-frontend:
+    docker:
+      - image: cimg/node:16.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - fe-deps-{{ checksum "package-lock.json" }}
+            - fe-deps-
+      - run:
+          name: frontend-scan
+          command: |
+            cd backend
+            npm install
+            npm audit
+
+  scan-backend:
+    docker:
+      - image: cimg/node:16.4.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - be-deps-{{ checksum "package-lock.json" }}
+            - be-deps-
+      - run:
+          name: backend-scan
+          command: |
+            cd backend
+            npm install
+            npm audit
             
 workflows:
   default:
@@ -97,4 +133,8 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
      
