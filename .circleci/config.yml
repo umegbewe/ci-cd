@@ -34,14 +34,14 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: alpine-node:latest
     steps:
       - checkout
       - run:
           name: Build front-end
           command: |
             cd frontend
-            npm install --save-dev jest
+            npm install
       - save_cache:
           key: fe-deps-{{ checksum "package-lock.json" }}
           paths:
@@ -49,14 +49,14 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: alpine-node:latest
     steps:
       - checkout
       - run:
           name: Back-end build
           command: |
              cd backend
-             npm install --save-dev jest
+             npm install
       - save_cache:
           key: be-deps-{{ checksum "package-lock.json" }}
           paths:
