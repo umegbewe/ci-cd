@@ -135,13 +135,21 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              # --stack-name "devproj-backend-${CIRCLE_WORKFLOW_ID:0:7}" "  
+               --stack-name "devproj-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+               --tags Devproj=backend
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-               --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:8}" 
+               --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:8}" \
+                --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                --tags Devproj=frontend
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/files/inventory 
             
 workflows:
   default:
