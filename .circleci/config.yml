@@ -70,11 +70,11 @@ jobs:
           keys: 
             - fe-deps-{{ checksum "package-lock.json" }}
             - fe-deps-
-
       - run:
           name: backend-test
           command: |
             cd backend
+            npm install
             npm test
                 
   test-backend:
@@ -90,6 +90,7 @@ jobs:
           name: backend-test
           command: |
             cd backend
+            npm install
             npm test
             
 workflows:
