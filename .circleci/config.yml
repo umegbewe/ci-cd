@@ -42,6 +42,7 @@ jobs:
           command: |
             cd frontend
             npm install
+            npm install --save-dev jest
       - save_cache:
           key: fe-deps-{{ checksum "package-lock.json" }}
           paths:
@@ -57,6 +58,7 @@ jobs:
           command: |
              cd backend
              npm install
+             npm install --save-dev jest
       - save_cache:
           key: be-deps-{{ checksum "package-lock.json" }}
           paths:
