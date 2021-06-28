@@ -125,6 +125,24 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              # --stack-name "devproj-backend-${CIRCLE_WORKFLOW_ID:0:7}" "  
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+               --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:8}" 
+            
 workflows:
   default:
     jobs:
