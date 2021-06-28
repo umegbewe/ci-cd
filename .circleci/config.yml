@@ -143,7 +143,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-               --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:8}" \
+               --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                 --tags Devproj=frontend
       - run:
@@ -155,19 +155,22 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
-            
+            - project/.circleci/ansible/
+      - run:
+          name: Destroy Environments
+          command: |
+            aws delete-stack --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          when: on_fail
       
   configure-infrastructure:
-    docker:
-      public.ecr.aws/n2a1x7q2/ansible-aws:latest
+    executor: python
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "60:43:5f:eb:0f:bb:a6:e4:38:ad:6e:fa:a2:b6:b0:8a"
       - attach_workspace:
-          at: project/.circleci/ansible/
+          at: .
 
       - run:
           name: Install dependencies
