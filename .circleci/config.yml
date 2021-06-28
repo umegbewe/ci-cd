@@ -41,6 +41,7 @@ jobs:
           name: Build front-end
           command: |
             cd frontend
+            npm install
             npm run build
       - save_cache:
           key: fe-deps-{{ checksum "package-lock.json" }}
@@ -56,6 +57,7 @@ jobs:
           name: Back-end build
           command: |
              cd backend
+             npm install
              npm run build
       - save_cache:
           key: be-deps-{{ checksum "package-lock.json" }}
