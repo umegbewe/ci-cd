@@ -151,7 +151,7 @@ jobs:
           command: |
             pwd
             ls
-            aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ./circleci/files/inventory
+            aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ./.circleci/files/inventory
             cat inventory
           
       - persist_to_workspace:
