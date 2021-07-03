@@ -180,7 +180,6 @@ jobs:
             pip install awscli
       - run:
           name: Configure server
-          command: |
           no_output_timeout: 30m
           command: |
             echo ENVIROMENT=production > "backend/.env"
