@@ -192,6 +192,7 @@ jobs:
             npm run migrations > migration_result    
       - run:
           name: send output of migration to memstash
+          command: |
           if grep -q "has been executed successfully" migration_result
           then 
             echo "migration ran successfully, updating memstash"
