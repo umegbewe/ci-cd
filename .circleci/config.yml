@@ -193,14 +193,14 @@ jobs:
       - run:
           name: send output of migration to memstash
           command: |
-          if grep -q "has been executed successfully" migration_result
-          then 
-            echo "migration ran successfully, updating memstash"
-            curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "migrated" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
-          else
-            echo "migration failed"
-            curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "failed" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
-          fi
+            if grep -q "has been executed successfully" migration_result
+            then 
+              echo "migration ran successfully, updating memstash"
+              curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "migrated" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
+            else
+              echo "migration failed"
+              curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "failed" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
+            fi
       - destroy-environment
 workflows:
   default:
