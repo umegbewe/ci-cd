@@ -175,16 +175,6 @@ jobs:
           name: Configure server
           no_output_timeout: 30m
           command: |
-            echo ENVIROMENT=production > "backend/.env"
-            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             cat inventory.txt
@@ -199,8 +189,17 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            npm run migrations
+            npm run migrations > migration_result    
+      - run:
+          name: send output of migration to memstash
+          if grep -q "has been executed successfully" migration_result
+          then 
+            echo "migration ran successfully, updating memstash"
+            curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "migrated" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
+          else
+            echo "migration failed"
+            curl -H "Content-Type: text/plain" -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request PUT --data "failed" https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
+          fi
       - destroy-environment
 workflows:
   default:
@@ -219,7 +218,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [main]
+              only: [maint]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
      
