@@ -240,6 +240,10 @@ jobs:
             apk add --update tar gzip ansible nodejs npm curl
             pip install awscli
       - run:
+          name: Setup inventory file
+          command: |
+          
+      - run:
           name: Deploy backend
           command: |
             cd backend
@@ -249,7 +253,9 @@ jobs:
             rm -rf dist
             rm -rf test
             rm README.md
+            
             cd ../.circleci/ansible
+            aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
