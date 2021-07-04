@@ -240,10 +240,6 @@ jobs:
             apk add --update tar gzip ansible nodejs npm curl
             pip install awscli
       - run:
-          name: Setup inventory file
-          command: |
-          
-      - run:
           name: Deploy backend
           command: |
             cd backend
