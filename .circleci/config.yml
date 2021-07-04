@@ -186,7 +186,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
-            ansible-playbook -i configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
   run-migrations:
     docker:
