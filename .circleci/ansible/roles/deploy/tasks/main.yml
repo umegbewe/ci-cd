@@ -1,16 +1,33 @@
     ---
-      - name: "execute server"
-        become: true
-        command: pm2 start -f ./main.js
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
 
-        environment:
-         ENVIRONMENT: production
-         TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-         TYPEORM_MIGRATIONS_DIR: "./migrations"
-         TYPEORM_MIGRATIONS: "./migrations/*.js"
-         TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-         TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-         TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-         TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-         TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-         TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+- name: "install dependencies."
+  become: true
+  apt:
+    name: ["nodejs", "npm", "tar"]
+    state: latest
+    update_cache: yes
+
+- name: "copy backend folder"
+  become: true
+  copy:
+    src: /root/project/backend
+    dest: /home/ubuntu
+    
+- name: Install Node Dependencies
+  shell: |
+    cd /home/ubuntu/backend
+    npm install
+    
+- name: Building backend service
+  shell: |
+    cd /home/ubuntu/backend
+    npm run build
+  
+- name: "execute server"
+  become: true
+  shell: |
+    pm2 start npm --no-automation --name "backend" run start
