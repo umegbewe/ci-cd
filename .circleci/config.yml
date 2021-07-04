@@ -151,6 +151,8 @@ jobs:
           command: |
             pwd
             ls
+            ls -a
+            ls ./.circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ./.circleci/ansible/inventory.txt
             cat inventory
           
