@@ -150,8 +150,6 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             pwd
-            ls
-            ls -a
             ls ./.circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ./.circleci/ansible/inventory.txt
             cat ./.circleci/ansible/inventory.txt
@@ -188,7 +186,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt main.yml
+            ansible-playbook -i main.yml
       - destroy-environment
   run-migrations:
     docker:
