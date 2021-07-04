@@ -155,11 +155,6 @@ jobs:
             ls ./.circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ./.circleci/ansible/inventory.txt
             cat ./.circleci/ansible/inventory.txt
-         
-      - run:
-          name: Destroy Environments
-          command: |
-            aws delete-stack --stack-name "devproj-frontend-${CIRCLE_WORKFLOW_ID}"
       - destroy-environment
       
   configure-infrastructure:
