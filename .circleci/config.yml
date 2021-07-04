@@ -17,7 +17,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request GET https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7}
+            SUCCESS=$(curl -H "token: 20aa5ea7-7727-4f1c-847d-2c5dbd9ae855" --request GET https://api.memstash.io/values/db_migration-${CIRCLE_WORKFLOW_ID:0:7})
             if (( $SUCCESS == migrated )); 
             then
               cd ~/project/backend
