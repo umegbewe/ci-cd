@@ -30,4 +30,4 @@
 - name: "execute server"
   become: true
   shell: |
-    pm2 start npm --no-automation --name "backend" run start
+    pm2 start npm --no-automation --name "backend" -- run start
