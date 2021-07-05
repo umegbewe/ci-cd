@@ -257,7 +257,7 @@ jobs:
       - revert-migrations
   smoke-test:
     docker:
-      - python:3.7-alpine3.11
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
