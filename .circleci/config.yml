@@ -245,11 +245,6 @@ jobs:
             cd backend
             npm i
             npm run build
-            rm -rf node_modules 
-            rm -rf dist
-            rm -rf test
-            rm README.md
-            
             cd ../.circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
@@ -266,15 +261,12 @@ jobs:
             apk add --update curl
             pip install awscli
       - run:
-          name: Get backend url
+          name: Backend smoke test.
           command: |
             BACKEND_IP=$(aws ec2 describe-instances \
             --filters Name=tag:Devproj,Values=backend \
             --query 'Reservations[*].Instances[*].PublicIpAddress' --output text) 
-            echo "{$BACKEND_IP}"
-      - run:
-          name: Backend smoke test.
-          command: |
+            echo "${BACKEND_IP}"
             curl "http://${BACKEND_IP}:3030/api/status"
       - run:
           name: Frontend smoke test.
