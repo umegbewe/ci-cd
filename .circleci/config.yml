@@ -271,7 +271,7 @@ jobs:
             BACKEND_IP=$(aws ec2 describe-instances \
             --filters Name=tag:Devproj,Values=backend \
             --query 'Reservations[*].Instances[*].PublicIpAddress' --output text) 
-            echo "{$BACKEND_IP}""
+            echo "{$BACKEND_IP}"
       - run:
           name: Backend smoke test.
           command: |
