@@ -243,8 +243,23 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
+            touch .env
+            echo ENVIROMENT=production > ".env"
+            echo TYPEORM_CONNECTION=postgres >> ".env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ".env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ".env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ".env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
             npm i
             npm run build
+            rm -rf node_modules 
+            rm -rf dist
+            rm -rf test
+            rm README.md 
             cd ../.circleci/ansible
             aws ec2 describe-instances --filters Name=tag:Devproj,Values=backend --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
