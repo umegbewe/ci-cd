@@ -278,11 +278,11 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
+            backendip="aws ec2 describe-instances \
             --filters Name=tag:Devproj,Values=backend \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' --output text) 
-            echo "${BACKEND_IP}"
-            curl "http://${BACKEND_IP}:3030/api/status"
+            --query 'Reservations[*].Instances[*].PublicIpAddress' --output text" 
+            echo $backendip
+            curl "http://$backendip:3030/api/status"
       - run:
           name: Frontend smoke test.
           command: |
