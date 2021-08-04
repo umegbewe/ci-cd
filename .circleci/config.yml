@@ -282,7 +282,7 @@ jobs:
             --filters Name=tag:Devproj,Values=backend \
             --query 'Reservations[*].Instances[*].PublicIpAddress' --output text" 
             echo $backendip
-            curl "http://$backendip:3030/api/status"
+            curl -g "http://$backendip:3030/api/status"
       - run:
           name: Frontend smoke test.
           command: |
