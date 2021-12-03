@@ -1,2 +1,3 @@
-# DevOps-Project
-A project to flex my DevOps skills
+# ci-cd
+
+Continuous integration and deployment project
